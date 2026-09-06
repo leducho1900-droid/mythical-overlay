@@ -1,33 +1,33 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8">
+<html lang="vi">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mythical Overlay</title>
 <style>
 html,body{margin:0;width:100%;height:100%;background:transparent!important;overflow:hidden}
 body{display:flex;align-items:center;justify-content:center}
 #grid{width:min(94vw,440px);display:grid;grid-template-columns:repeat(2,1fr);gap:0;box-sizing:border-box}
-.card{position:relative;width:100%;aspect-ratio:355/406;display:flex;align-items:center;justify-content:center}
-.base{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;user-select:none}
-.obj-wrap{position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);pointer-events:none}
-.obj{display:block;width:100%;height:auto;filter:drop-shadow(0 3px 6px rgba(0,0,0,.18));transform-origin:center center;animation: bob 1.9s ease-in-out infinite alternate, sway 2.9s ease-in-out infinite alternate}
-.card.magnet .obj-wrap{width:70%}
-.card.dragon .obj-wrap{width:76%}
-.card.kitsune .obj-wrap{width:72%}
-.card.control .obj-wrap{width:72%}
-.card.magnet .obj{animation-delay:0s,.2s}
-.card.dragon .obj{animation-delay:.2s,.45s}
-.card.kitsune .obj{animation-delay:.45s,.1s}
-.card.control .obj{animation-delay:.1s,.6s}
-@keyframes bob{0%{transform:translateY(2px) scale(1)}100%{transform:translateY(-4px) scale(1.015)}}
-@keyframes sway{0%{rotate:-1.6deg}100%{rotate:1.6deg}}
-</style></head><body><div id="grid"></div>
+.card{position:relative;width:100%;aspect-ratio:355/406;overflow:visible}
+.base,.obj{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;user-select:none}
+.obj{transform-origin:center 67%;will-change:transform;animation:petBob 2.1s ease-in-out infinite alternate,petTilt 3.2s ease-in-out infinite alternate}
+.card.magnet .obj{animation-delay:0s,.15s}
+.card.dragon .obj{animation-delay:.25s,.5s}
+.card.kitsune .obj{animation-delay:.55s,.25s}
+.card.control .obj{animation-delay:.12s,.7s}
+@keyframes petBob{from{transform:translateY(2px)}to{transform:translateY(-4px)}}
+@keyframes petTilt{from{rotate:-1deg}to{rotate:1deg}}
+</style>
+</head>
+<body>
+<div id="grid"></div>
 <script>
 const TOPIC='mythical-overlay-7f4c9d2a8b6e1c53';
 const items=[
-  ['magnet','magnet.png','magnet_obj.png'],
-  ['dragon','dragon.png','dragon_obj.png'],
-  ['kitsune','kitsune.png','kitsune_obj.png'],
-  ['control','control.png','control_obj.png']
+  ['magnet','magnet_base.png','magnet_obj.png'],
+  ['dragon','dragon_base.png','dragon_obj.png'],
+  ['kitsune','kitsune_base.png','kitsune_obj.png'],
+  ['control','control_base.png','control_obj.png']
 ];
 let state={magnet:true,dragon:true,kitsune:true,control:true};
 function render(){
@@ -39,19 +39,21 @@ function render(){
     card.className='card '+id;
     const base=document.createElement('img');
     base.className='base';
-    base.src=baseSrc+'?v=7';
-    const wrap=document.createElement('div');
-    wrap.className='obj-wrap';
+    base.src=baseSrc+'?v=8';
     const obj=document.createElement('img');
     obj.className='obj';
-    obj.src=objSrc+'?v=7';
-    wrap.appendChild(obj);
+    obj.src=objSrc+'?v=8';
     card.appendChild(base);
-    card.appendChild(wrap);
+    card.appendChild(obj);
     grid.appendChild(card);
   }
 }
 function apply(x){try{x=JSON.parse(x);if(x&&typeof x==='object'){state={...state,...x};render()}}catch(e){}}
-try{const es=new EventSource('https://ntfy.sh/'+TOPIC+'/sse');es.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.event==='message')apply(d.message)}catch(err){}}}catch(e){}
+try{
+  const es=new EventSource('https://ntfy.sh/'+TOPIC+'/sse');
+  es.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.event==='message')apply(d.message)}catch(err){}};
+}catch(e){}
 render();
-</script></body></html>
+</script>
+</body>
+</html>

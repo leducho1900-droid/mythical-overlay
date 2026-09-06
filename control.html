@@ -9,7 +9,7 @@ function render(){document.getElementById('controls').innerHTML=items.map(([id,n
 async function send(){const r=await fetch('https://ntfy.sh/'+TOPIC,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(s)}); if(!r.ok) throw new Error('send failed'); document.getElementById('status').textContent='✅ Đã gửi lệnh tới Overlay';}
 async function toggle(id){s[id]=!s[id];render();try{await send()}catch(e){document.getElementById('status').textContent='❌ Không gửi được lệnh. Kiểm tra mạng.'}}
 async function setAll(v){s={magnet:v,dragon:v,tiger:v,kitsune:v,control:v,yeti:v};render();try{await send()}catch(e){document.getElementById('status').textContent='❌ Không gửi được lệnh. Kiểm tra mạng.'}}
-function overlayUrl(){return location.origin+location.pathname.replace(/control\.html$/,'')+'?v=19'}
+function overlayUrl(){return location.origin+location.pathname.replace(/control\.html$/,'')+'?v=20'}
 async function copyLink(){const u=overlayUrl();try{await navigator.clipboard.writeText(u);document.getElementById('status').textContent='📋 Đã copy link Overlay'}catch(e){prompt('Copy link Overlay:',u)}}
 render();
 </script></body></html>

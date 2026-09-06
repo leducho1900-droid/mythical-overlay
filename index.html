@@ -1,28 +1,91 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mythical Overlay</title>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mythical Overlay</title>
 <style>
 html,body{margin:0;width:100%;height:100%;background:transparent!important;overflow:hidden}
 body{display:flex;align-items:center;justify-content:center}
-#grid{width:min(96vw,720px);display:flex;flex-wrap:wrap;justify-content:center;gap:10px;box-sizing:border-box;padding:4px}
+#wrap{width:min(96vw,740px);padding:4px;box-sizing:border-box}
+.row{display:flex;justify-content:center;align-items:flex-start;gap:10px;margin:0 0 10px 0}
+.row:last-child{margin-bottom:0}
 .card{position:relative;flex:0 0 calc((100% - 20px)/3);max-width:170px;aspect-ratio:355/406;overflow:visible}
-.base,.float-wrap,.obj{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;user-select:none}.base,.obj{object-fit:contain}
+.row[data-count="2"] .card{flex-basis:calc((100% - 10px)/2);max-width:170px}
+.row[data-count="1"] .card{flex-basis:170px;max-width:170px}
+.base,.float-wrap,.obj{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;user-select:none}
+.base,.obj{object-fit:contain}
 .float-wrap{will-change:transform;animation:floatY 2.8s cubic-bezier(.45,.05,.55,.95) infinite alternate}
 .obj{transform-origin:center 68%;will-change:transform;animation:drift 4.2s cubic-bezier(.42,0,.58,1) infinite alternate}
 .card.magnet .float-wrap{animation-delay:0s}.card.magnet .obj{animation-delay:.1s}
 .card.dragon .float-wrap{animation-delay:.35s}.card.dragon .obj{animation-delay:.5s}
-.card.fox .float-wrap{animation-delay:.52s}.card.fox .obj{animation-delay:.35s}
+.card.tiger .float-wrap{animation-delay:.52s}.card.tiger .obj{animation-delay:.35s}
 .card.kitsune .float-wrap{animation-delay:.75s}.card.kitsune .obj{animation-delay:.2s}
 .card.control .float-wrap{animation-delay:.18s}.card.control .obj{animation-delay:.65s}
-.card.frost .float-wrap{animation-delay:.9s}.card.frost .obj{animation-delay:.8s}
+.card.yeti .float-wrap{animation-delay:.9s}.card.yeti .obj{animation-delay:.8s}
 @keyframes floatY{0%{transform:translateY(2px)}100%{transform:translateY(-3px)}}
 @keyframes drift{0%{transform:translateX(-1px) rotate(-.45deg) scale(1)}50%{transform:translateX(0) rotate(0deg) scale(1.005)}100%{transform:translateX(1px) rotate(.45deg) scale(1.01)}}
-</style></head><body><div id="grid"></div>
+</style>
+</head>
+<body>
+<div id="wrap"></div>
 <script>
 const TOPIC='mythical-overlay-7f4c9d2a8b6e1c53';
-const items=[['magnet','magnet_base.png','magnet_obj.png'],['dragon','dragon_base.png','dragon_obj.png'],['fox','fox_base.png','fox_obj.png'],['kitsune','kitsune_base.png','kitsune_obj.png'],['control','control_base.png','control_obj.png'],['frost','frost_base.png','frost_obj.png']];
-let state={magnet:true,dragon:true,fox:true,kitsune:true,control:true,frost:true};
-function render(){const grid=document.getElementById('grid');const visible=items.filter(([id])=>state[id]);grid.innerHTML='';visible.forEach(([id,baseSrc,objSrc])=>{const card=document.createElement('div');card.className='card '+id;const base=document.createElement('img');base.className='base';base.src=baseSrc+'?v=14';const wrap=document.createElement('div');wrap.className='float-wrap';const obj=document.createElement('img');obj.className='obj';obj.src=objSrc+'?v=14';wrap.appendChild(obj);card.appendChild(base);card.appendChild(wrap);grid.appendChild(card);});}
-function apply(x){try{x=JSON.parse(x);if(x&&typeof x==='object'){state={...state,...x};render()}}catch(e){}}
-try{const es=new EventSource('https://ntfy.sh/'+TOPIC+'/sse');es.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.event==='message')apply(d.message)}catch(err){}};}catch(e){}
+const items=[
+  ['magnet','magnet_base.png','magnet_obj.png'],
+  ['dragon','dragon_base.png','dragon_obj.png'],
+  ['tiger','tiger_base.png','tiger_obj.png'],
+  ['kitsune','kitsune_base.png','kitsune_obj.png'],
+  ['control','control_base.png','control_obj.png'],
+  ['yeti','yeti_base.png','yeti_obj.png']
+];
+let state={magnet:true,dragon:true,tiger:true,kitsune:true,control:true,yeti:true};
+function splitVisible(arr){
+  const n=arr.length;
+  if(n<=0) return [];
+  if(n===1) return [arr];
+  if(n===2) return [arr];
+  if(n===3) return [arr];
+  if(n===4) return [arr.slice(0,2),arr.slice(2)];
+  if(n===5) return [arr.slice(0,3),arr.slice(3)];
+  return [arr.slice(0,3),arr.slice(3,6)];
+}
+function render(){
+  const wrap=document.getElementById('wrap');
+  const visible=items.filter(([id])=>state[id]);
+  const rows=splitVisible(visible);
+  wrap.innerHTML='';
+  rows.forEach(group=>{
+    const row=document.createElement('div');
+    row.className='row';
+    row.dataset.count=String(group.length);
+    group.forEach(([id,baseSrc,objSrc])=>{
+      const card=document.createElement('div');
+      card.className='card '+id;
+      const base=document.createElement('img');
+      base.className='base';
+      base.src=baseSrc+'?v=16';
+      const floatWrap=document.createElement('div');
+      floatWrap.className='float-wrap';
+      const obj=document.createElement('img');
+      obj.className='obj';
+      obj.src=objSrc+'?v=16';
+      floatWrap.appendChild(obj);
+      card.appendChild(base);
+      card.appendChild(floatWrap);
+      row.appendChild(card);
+    });
+    wrap.appendChild(row);
+  });
+}
+function apply(x){
+  try{x=JSON.parse(x);if(x&&typeof x==='object'){state={...state,...x};render()}}catch(e){}
+}
+try{
+  const es=new EventSource('https://ntfy.sh/'+TOPIC+'/sse');
+  es.onmessage=e=>{try{const d=JSON.parse(e.data); if(d.event==='message') apply(d.message)}catch(err){}};
+}catch(e){}
 render();
-</script></body></html>
+</script>
+</body>
+</html>

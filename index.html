@@ -6,17 +6,51 @@
 html,body{margin:0;width:100%;height:100%;background:transparent!important;overflow:hidden}
 body{display:flex;align-items:center;justify-content:center}
 #grid{width:min(94vw,440px);display:grid;grid-template-columns:repeat(2,1fr);gap:0;box-sizing:border-box}
-.card{width:100%;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
-.card img{width:100%;height:100%;object-fit:contain;display:block}
+.card{width:100%;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;will-change:transform;transform-origin:center center}
+.card img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;user-select:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,.18))}
+
+/* chuyển động nhẹ */
+.card{
+  animation-name: floaty, sway;
+  animation-timing-function: ease-in-out, ease-in-out;
+  animation-iteration-count: infinite, infinite;
+  animation-direction: alternate, alternate;
+}
+.card.magnet{animation-duration: 2.8s, 3.8s; animation-delay: 0s, .2s}
+.card.dragon{animation-duration: 3.1s, 4.1s; animation-delay: .35s, .55s}
+.card.kitsune{animation-duration: 2.9s, 3.6s; animation-delay: .7s, .4s}
+.card.control{animation-duration: 3.2s, 4.3s; animation-delay: .15s, .8s}
+
+@keyframes floaty{
+  0%{transform:translateY(0px) scale(1)}
+  100%{transform:translateY(-6px) scale(1.01)}
+}
+@keyframes sway{
+  0%{rotate:-1.2deg}
+  100%{rotate:1.2deg}
+}
 </style></head><body><div id="grid"></div>
 <script>
 const TOPIC="mythical-overlay-7f4c9d2a8b6e1c53";
 const items=[["magnet","magnet.png"],["dragon","dragon.png"],["kitsune","kitsune.png"],["control","control.png"]];
 let state={magnet:true,dragon:true,kitsune:true,control:true};
-function render(){grid.innerHTML="";for(const [id,file] of items)if(state[id]){
-let d=document.createElement("div");d.className="card";let i=document.createElement("img");i.src=file+"?v=4";d.appendChild(i);grid.appendChild(d)}}
+function render(){
+  const grid=document.getElementById('grid');
+  grid.innerHTML="";
+  for(const [id,file] of items) if(state[id]){
+    const d=document.createElement("div");
+    d.className="card "+id;
+    const i=document.createElement("img");
+    i.src=file+"?v=5";
+    i.alt=id;
+    d.appendChild(i);
+    grid.appendChild(d);
+  }
+}
 function apply(x){try{x=JSON.parse(x);if(x&&typeof x==="object"){state={...state,...x};render()}}catch(e){}}
-const es=new EventSource("https://ntfy.sh/"+TOPIC+"/sse");
-es.onmessage=e=>{try{let d=JSON.parse(e.data);if(d.event==="message")apply(d.message)}catch(err){}};
+try{
+  const es=new EventSource("https://ntfy.sh/"+TOPIC+"/sse");
+  es.onmessage=e=>{try{let d=JSON.parse(e.data);if(d.event==="message")apply(d.message)}catch(err){}};
+}catch(e){}
 render();
 </script></body></html>

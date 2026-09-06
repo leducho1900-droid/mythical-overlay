@@ -3,13 +3,13 @@
 <body><div class="wrap"><h1>🎛 Mythical Overlay Control</h1><p>Bấm nút để bật/tắt từng thẻ. Tổng cộng 6 thẻ, hiển thị 3 thẻ hàng trên và 3 thẻ hàng dưới. Nếu còn đúng 3 thẻ thì sẽ hiện 2 thẻ trên và 1 thẻ nằm chính giữa ở hàng dưới.</p><div id="controls"></div><div class="all"><button class="btn on" onclick="setAll(true)">Bật tất cả</button><button class="btn off" onclick="setAll(false)">Tắt tất cả</button><button class="btn copy" onclick="copyLink()">📋 Copy Overlay Link</button></div><div class="status" id="status">Đang kết nối...</div><p class="hint">Giữ nguyên trang này để điều khiển. Link Overlay dùng cho TikTok Studio.</p></div>
 <script>
 const TOPIC='mythical-overlay-7f4c9d2a8b6e1c53';
-const items=[['magnet','🧲 Mythical Magnet'],['dragon','🐉 Mythical Dragon'],['tiger','🐯 Tiger'],['kitsune','🦊 Mythical Kitsune'],['control','🔵 Mythical Control'],['yeti','❄️ Yeti']];
+const items=[['magnet','🧲 Mythical Magnet'],['dragon','🐉 Mythical Dragon'],['tiger','🐯 Mythical Tiger'],['kitsune','🦊 Mythical Kitsune'],['control','🔵 Mythical Control'],['yeti','❄️ Mythical Yeti']];
 let s={magnet:true,dragon:true,tiger:true,kitsune:true,control:true,yeti:true};
 function render(){document.getElementById('controls').innerHTML=items.map(([id,n])=>`<div class="row"><span class="name">${n}</span><button class="btn ${s[id]?'on':'off'}" onclick="toggle('${id}')">${s[id]?'ĐANG BẬT':'ĐANG TẮT'}</button></div>`).join('')}
 async function send(){const r=await fetch('https://ntfy.sh/'+TOPIC,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(s)}); if(!r.ok) throw new Error('send failed'); document.getElementById('status').textContent='✅ Đã gửi lệnh tới Overlay';}
 async function toggle(id){s[id]=!s[id];render();try{await send()}catch(e){document.getElementById('status').textContent='❌ Không gửi được lệnh. Kiểm tra mạng.'}}
 async function setAll(v){s={magnet:v,dragon:v,tiger:v,kitsune:v,control:v,yeti:v};render();try{await send()}catch(e){document.getElementById('status').textContent='❌ Không gửi được lệnh. Kiểm tra mạng.'}}
-function overlayUrl(){return location.origin+location.pathname.replace(/control\.html$/,'')+'?v=20'}
+function overlayUrl(){return location.origin+location.pathname.replace(/control\.html$/,'')+'?v=21'}
 async function copyLink(){const u=overlayUrl();try{await navigator.clipboard.writeText(u);document.getElementById('status').textContent='📋 Đã copy link Overlay'}catch(e){prompt('Copy link Overlay:',u)}}
 render();
 </script></body></html>

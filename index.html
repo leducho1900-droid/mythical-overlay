@@ -14,7 +14,7 @@ const TOPIC="mythical-overlay-7f4c9d2a8b6e1c53";
 const items=[["magnet","magnet.png"],["dragon","dragon.png"],["kitsune","kitsune.png"],["control","control.png"]];
 let state={magnet:true,dragon:true,kitsune:true,control:true};
 function render(){grid.innerHTML="";for(const [id,file] of items)if(state[id]){
-let d=document.createElement("div");d.className="card";let i=document.createElement("img");i.src=file+"?v=3";d.appendChild(i);grid.appendChild(d)}}
+let d=document.createElement("div");d.className="card";let i=document.createElement("img");i.src=file+"?v=4";d.appendChild(i);grid.appendChild(d)}}
 function apply(x){try{x=JSON.parse(x);if(x&&typeof x==="object"){state={...state,...x};render()}}catch(e){}}
 const es=new EventSource("https://ntfy.sh/"+TOPIC+"/sse");
 es.onmessage=e=>{try{let d=JSON.parse(e.data);if(d.event==="message")apply(d.message)}catch(err){}};

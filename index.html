@@ -6,57 +6,52 @@
 html,body{margin:0;width:100%;height:100%;background:transparent!important;overflow:hidden}
 body{display:flex;align-items:center;justify-content:center}
 #grid{width:min(94vw,440px);display:grid;grid-template-columns:repeat(2,1fr);gap:0;box-sizing:border-box}
-.card{position:relative;width:100%;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
-.card .base,.card .fruit{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;user-select:none}
-.card .base{filter:drop-shadow(0 3px 7px rgba(0,0,0,.16))}
-/* Chỉ phần trái ác quỷ/đồ vật bên trong chuyển động nhẹ */
-.fruit-window{position:absolute;left:15%;right:15%;top:25%;bottom:15%;overflow:hidden;pointer-events:none}
-.card.control .fruit-window{left:13%;right:13%;top:24%;bottom:14%}
-.card .fruit{transform-origin:center center;opacity:.98;will-change:transform;animation-name: fruitBob, fruitSway;animation-timing-function:ease-in-out,ease-in-out;animation-iteration-count:infinite,infinite;animation-direction:alternate,alternate}
-.card.magnet .fruit{animation-duration:1.9s,2.8s;animation-delay:0s,.15s}
-.card.dragon .fruit{animation-duration:2.1s,3.0s;animation-delay:.25s,.45s}
-.card.kitsune .fruit{animation-duration:2.0s,2.7s;animation-delay:.55s,.2s}
-.card.control .fruit{animation-duration:2.2s,3.2s;animation-delay:.1s,.6s}
-@keyframes fruitBob{
-  0%{transform:translateY(2px) scale(1.03)}
-  100%{transform:translateY(-5px) scale(1.05)}
-}
-@keyframes fruitSway{
-  0%{rotate:-1.8deg}
-  100%{rotate:1.8deg}
-}
+.card{position:relative;width:100%;aspect-ratio:355/406;display:flex;align-items:center;justify-content:center}
+.base{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;user-select:none}
+.obj-wrap{position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);pointer-events:none}
+.obj{display:block;width:100%;height:auto;filter:drop-shadow(0 3px 6px rgba(0,0,0,.18));transform-origin:center center;animation: bob 1.9s ease-in-out infinite alternate, sway 2.9s ease-in-out infinite alternate}
+.card.magnet .obj-wrap{width:70%}
+.card.dragon .obj-wrap{width:76%}
+.card.kitsune .obj-wrap{width:72%}
+.card.control .obj-wrap{width:72%}
+.card.magnet .obj{animation-delay:0s,.2s}
+.card.dragon .obj{animation-delay:.2s,.45s}
+.card.kitsune .obj{animation-delay:.45s,.1s}
+.card.control .obj{animation-delay:.1s,.6s}
+@keyframes bob{0%{transform:translateY(2px) scale(1)}100%{transform:translateY(-4px) scale(1.015)}}
+@keyframes sway{0%{rotate:-1.6deg}100%{rotate:1.6deg}}
 </style></head><body><div id="grid"></div>
 <script>
-const TOPIC="mythical-overlay-7f4c9d2a8b6e1c53";
-const items=[["magnet","magnet.png"],["dragon","dragon.png"],["kitsune","kitsune.png"],["control","control.png"]];
+const TOPIC='mythical-overlay-7f4c9d2a8b6e1c53';
+const items=[
+  ['magnet','magnet.png','magnet_obj.png'],
+  ['dragon','dragon.png','dragon_obj.png'],
+  ['kitsune','kitsune.png','kitsune_obj.png'],
+  ['control','control.png','control_obj.png']
+];
 let state={magnet:true,dragon:true,kitsune:true,control:true};
 function render(){
   const grid=document.getElementById('grid');
   grid.innerHTML='';
-  for(const [id,file] of items){
+  for(const [id,baseSrc,objSrc] of items){
     if(!state[id]) continue;
     const card=document.createElement('div');
     card.className='card '+id;
     const base=document.createElement('img');
     base.className='base';
-    base.src=file+'?v=6';
-    base.alt=id;
-    const win=document.createElement('div');
-    win.className='fruit-window';
-    const fruit=document.createElement('img');
-    fruit.className='fruit';
-    fruit.src=file+'?v=6';
-    fruit.alt='moving '+id;
-    win.appendChild(fruit);
+    base.src=baseSrc+'?v=7';
+    const wrap=document.createElement('div');
+    wrap.className='obj-wrap';
+    const obj=document.createElement('img');
+    obj.className='obj';
+    obj.src=objSrc+'?v=7';
+    wrap.appendChild(obj);
     card.appendChild(base);
-    card.appendChild(win);
+    card.appendChild(wrap);
     grid.appendChild(card);
   }
 }
 function apply(x){try{x=JSON.parse(x);if(x&&typeof x==='object'){state={...state,...x};render()}}catch(e){}}
-try{
-  const es=new EventSource('https://ntfy.sh/'+TOPIC+'/sse');
-  es.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.event==='message')apply(d.message)}catch(err){}};
-}catch(e){}
+try{const es=new EventSource('https://ntfy.sh/'+TOPIC+'/sse');es.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.event==='message')apply(d.message)}catch(err){}}}catch(e){}
 render();
 </script></body></html>

@@ -9,7 +9,7 @@
 </head>
 <body><div class="wrap">
 <h1>🎛 Mythical Overlay Control</h1>
-<p>Bấm nút để bật/tắt từng thẻ. Overlay trong TikTok Studio sẽ nhận lệnh qua mạng. Chỉ phần trái ác quỷ/đồ vật bên trong thẻ đang có chuyển động nhẹ.</p>
+<p>Bấm nút để bật/tắt từng thẻ. Overlay trong TikTok Studio sẽ nhận lệnh qua mạng.</p>
 <div id="controls"></div>
 <div class="all"><button class="btn on" onclick="setAll(true)">Bật tất cả</button><button class="btn off" onclick="setAll(false)">Tắt tất cả</button><button class="btn copy" onclick="copyLink()">📋 Copy Overlay Link</button></div>
 <div class="status" id="status">Đang kết nối...</div>
@@ -27,7 +27,7 @@ async function send(){
 }
 async function toggle(id){s[id]=!s[id];render();try{await send()}catch(e){document.getElementById('status').textContent='❌ Không gửi được lệnh. Kiểm tra mạng.'}}
 async function setAll(v){s={magnet:v,dragon:v,kitsune:v,control:v};render();try{await send()}catch(e){document.getElementById('status').textContent='❌ Không gửi được lệnh. Kiểm tra mạng.'}}
-function overlayUrl(){return location.href.replace(/control\.html(?:\?.*)?$/,'index.html?v=6')}
+function overlayUrl(){return location.href.replace(/control\.html(?:\?.*)?$/,'index.html')}
 async function copyLink(){const u=overlayUrl();try{await navigator.clipboard.writeText(u);document.getElementById('status').textContent='📋 Đã copy link Overlay'}catch(e){prompt('Copy link Overlay:',u)}}
 render();
 </script>

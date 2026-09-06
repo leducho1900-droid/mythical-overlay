@@ -27,7 +27,7 @@ async function send(){
 }
 async function toggle(id){s[id]=!s[id];render();try{await send()}catch(e){document.getElementById('status').textContent='❌ Không gửi được lệnh. Kiểm tra mạng.'}}
 async function setAll(v){s={magnet:v,dragon:v,kitsune:v,control:v};render();try{await send()}catch(e){document.getElementById('status').textContent='❌ Không gửi được lệnh. Kiểm tra mạng.'}}
-function overlayUrl(){return location.origin+location.pathname.replace(/control\.html$/,'')+'?v=10'}
+function overlayUrl(){return location.origin+location.pathname.replace(/control\.html$/,'')+'?v=11'}
 async function copyLink(){const u=overlayUrl();try{await navigator.clipboard.writeText(u);document.getElementById('status').textContent='📋 Đã copy link Overlay'}catch(e){prompt('Copy link Overlay:',u)}}
 render();
 </script>

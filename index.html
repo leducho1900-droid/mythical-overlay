@@ -5,7 +5,14 @@
 <style>
 html,body{margin:0;width:100%;height:100%;background:transparent!important;overflow:hidden}
 body{display:flex;align-items:center;justify-content:center}
-#grid{width:min(94vw,468px);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;box-sizing:border-box;padding:4px;justify-items:stretch;align-items:start}
+#grid{
+  width:min(94vw,468px);
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  box-sizing:border-box;
+  padding:4px;
+}
 .card{position:relative;width:100%;aspect-ratio:355/406;overflow:visible}
 .base,.float-wrap,.obj{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;user-select:none}
 .base,.obj{object-fit:contain}
@@ -16,15 +23,7 @@ body{display:flex;align-items:center;justify-content:center}
 .card.kitsune .float-wrap{animation-delay:.75s}.card.kitsune .obj{animation-delay:.2s}
 .card.control .float-wrap{animation-delay:.18s}.card.control .obj{animation-delay:.65s}
 @keyframes floatY{0%{transform:translateY(2px)}100%{transform:translateY(-3px)}}
-@keyframes drift{0%{transform:translateX(-1px) rotate(-.45deg) scale(1)}50%{transform:translateX(0px) rotate(0deg) scale(1.005)}100%{transform:translateX(1px) rotate(.45deg) scale(1.01)}}
-
-/* căn giữa thông minh khi tắt bớt thẻ */
-#grid.count-1 .card:nth-child(1),
-#grid.count-3 .card:nth-child(3){
-  grid-column:1 / span 2;
-  width:calc((100% - 10px) / 2);
-  justify-self:center;
-}
+@keyframes drift{0%{transform:translateX(-1px) rotate(-.45deg) scale(1)}50%{transform:translateX(0) rotate(0deg) scale(1.005)}100%{transform:translateX(1px) rotate(.45deg) scale(1.01)}}
 </style>
 </head><body><div id="grid"></div>
 <script>
@@ -36,32 +35,64 @@ const items=[
   ['control','control_base.png','control_obj.png']
 ];
 let state={magnet:true,dragon:true,kitsune:true,control:true};
+
 function render(){
   const grid=document.getElementById('grid');
   const visible=items.filter(([id])=>state[id]);
-  grid.className='count-'+visible.length;
   grid.innerHTML='';
-  for(const [id,baseSrc,objSrc] of visible){
+
+  visible.forEach(([id,baseSrc,objSrc], idx)=>{
     const card=document.createElement('div');
     card.className='card '+id;
+
     const base=document.createElement('img');
     base.className='base';
-    base.src=baseSrc+'?v=10';
+    base.src=baseSrc+'?v=11';
+
     const wrap=document.createElement('div');
     wrap.className='float-wrap';
+
     const obj=document.createElement('img');
     obj.className='obj';
-    obj.src=objSrc+'?v=10';
+    obj.src=objSrc+'?v=11';
+
     wrap.appendChild(obj);
     card.appendChild(base);
     card.appendChild(wrap);
+
+    // Căn giữa bằng inline style để TikTok Studio chắc chắn áp dụng.
+    if(visible.length===3 && idx===2){
+      card.style.gridColumn='1 / span 2';
+      card.style.width='calc((100% - 10px) / 2)';
+      card.style.justifySelf='center';
+    }
+    if(visible.length===1){
+      card.style.gridColumn='1 / span 2';
+      card.style.width='calc((100% - 10px) / 2)';
+      card.style.justifySelf='center';
+    }
+
     grid.appendChild(card);
-  }
+  });
 }
-function apply(x){try{x=JSON.parse(x);if(x&&typeof x==='object'){state={...state,...x};render()}}catch(e){}}
+
+function apply(x){
+  try{
+    x=JSON.parse(x);
+    if(x&&typeof x==='object'){
+      state={...state,...x};
+      render();
+    }
+  }catch(e){}
+}
 try{
   const es=new EventSource('https://ntfy.sh/'+TOPIC+'/sse');
-  es.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.event==='message')apply(d.message)}catch(err){}};
+  es.onmessage=e=>{
+    try{
+      const d=JSON.parse(e.data);
+      if(d.event==='message')apply(d.message);
+    }catch(err){}
+  };
 }catch(e){}
 render();
 </script></body></html>

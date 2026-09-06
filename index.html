@@ -1,12 +1,39 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mythical Overlay</title>
-<style>html,body{margin:0;width:100%;height:100%;background:transparent;overflow:hidden}#grid{width:100%;height:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:max-content;gap:10px;align-content:start;justify-content:center;padding:8px;box-sizing:border-box}#grid img{width:100%;max-width:430px;height:auto;display:block;justify-self:center;object-fit:contain}@media(max-width:700px){#grid{grid-template-columns:1fr}}</style></head><body><div id="grid"></div><script>
-const KEY='mythical-overlay-state-v1';
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mythical Overlay</title>
+<style>
+html,body{margin:0;width:100%;height:100%;background:transparent!important;overflow:hidden}
+body{display:flex;align-items:center;justify-content:center}
+#grid{width:min(92vw,760px);height:92vh;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:10px;padding:6px;box-sizing:border-box;align-items:center;justify-items:center}
+.card{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.card img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+@media(max-width:600px){#grid{width:96vw;height:96vh;gap:6px}.card img{max-width:100%;max-height:100%}}
+</style>
+</head>
+<body>
+<div id="grid"></div>
+<script>
+const TOPIC='mythical-overlay-7f4c9d2a8b6e1c53';
 const items=[['magnet','magnet.png'],['dragon','dragon.png'],['kitsune','kitsune.png'],['control','control.png']];
-const defaultState={magnet:true,dragon:true,kitsune:true,control:true};
-function getState(){try{return {...defaultState,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){return defaultState}}
-function render(){const s=getState();const g=document.getElementById('grid');g.innerHTML='';items.forEach(([id,file])=>{if(s[id]){const im=document.createElement('img');im.src=file;im.dataset.id=id;g.appendChild(im)}})}
-window.addEventListener('storage',e=>{if(e.key===KEY)render()});
-if('BroadcastChannel' in window){const ch=new BroadcastChannel(KEY);ch.onmessage=render}
-setInterval(render,500);render();
-</script></body></html>
+const defaults={magnet:true,dragon:true,kitsune:true,control:true};
+let state={...defaults};
+function render(){
+  const g=document.getElementById('grid'); g.innerHTML='';
+  for(const [id,file] of items){
+    if(state[id]){const wrap=document.createElement('div');wrap.className='card';const im=document.createElement('img');im.src=file;im.alt=id;wrap.appendChild(im);g.appendChild(wrap)}
+  }
+}
+function applyMessage(msg){
+  try{const s=JSON.parse(msg); if(s&&typeof s==='object'){state={...state,...s};render();}}catch(e){}
+}
+try{
+  const es=new EventSource('https://ntfy.sh/'+TOPIC+'/sse');
+  es.onmessage=(e)=>{try{const d=JSON.parse(e.data);if(d.event==='message')applyMessage(d.message)}catch(err){}};
+}catch(e){}
+render();
+</script>
+</body>
+</html>

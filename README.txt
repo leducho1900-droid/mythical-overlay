@@ -1,8 +1,13 @@
-MYTHICAL OVERLAY – TIKTOK STUDIO
+MYTHICAL OVERLAY - FIXED
 
-1. Upload toàn bộ thư mục này lên một static hosting (GitHub Pages, Netlify, Cloudflare Pages...).
-2. Link điều khiển: /control.html
-3. Link overlay để dán vào TikTok Studio: /index.html
-4. Mở control.html trên cùng máy/trình duyệt và bật/tắt thẻ.
+Overlay URL after GitHub Pages:
+https://leducho1900-droid.github.io/mythical-overlay/
 
-LƯU Ý: Bản này dùng localStorage + BroadcastChannel để điều khiển không cần server. Nếu TikTok Studio dùng một storage partition riêng khiến trạng thái không đồng bộ, cần bản có backend/WebSocket; khi đó phải deploy thêm server.
+Control URL:
+https://leducho1900-droid.github.io/mythical-overlay/control.html
+
+This version:
+- Fits the 4 cards inside a vertical 9:16-style canvas.
+- Keeps transparent background.
+- Uses ntfy SSE so the control page can toggle the overlay even when TikTok Studio is a separate browser context.
+- The topic is a random public topic. Anyone who discovers the topic could theoretically send commands, so do not use this for sensitive information.

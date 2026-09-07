@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Text Overlay V35</title>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Text Overlay V36</title>
 <style>
 html,body{margin:0;width:100%;height:100%;background:transparent!important;overflow:hidden}
 body{display:flex;align-items:center;justify-content:center}
@@ -12,9 +12,9 @@ body{display:flex;align-items:center;justify-content:center}
 @media(max-width:650px){.word{width:min(88vw,360px)}}
 </style></head><body><div id="wrap"></div><script>
 const BACKEND_URL='https://mythical-overlay-backend.leducho1900.workers.dev';
-const items=[['text_3in1','combo_3in1_v35.png'],['text_4in1','combo_4in1_v35.png'],['text_5in1','combo_5in1_v35.png'],['text_6in1','combo_6in1_v35.png']];
+const items=[['text_3in1','combo_3in1_v36.png'],['text_4in1','combo_4in1_v36.png'],['text_5in1','combo_5in1_v36.png'],['text_6in1','combo_6in1_v36.png']];
 let state={text_3in1:false,text_4in1:false,text_5in1:false,text_6in1:false};
-function render(){const w=document.getElementById('wrap');w.innerHTML='';items.filter(([id])=>state[id]).forEach(([id,src])=>{const el=document.createElement('div');el.className='word '+id;const base=document.createElement('img');base.src=src+'?v=35';const sh=document.createElement('img');sh.src=src+'?v=35';sh.className='shine';el.append(base,sh);w.appendChild(el)})}
+function render(){const w=document.getElementById('wrap');w.innerHTML='';items.filter(([id])=>state[id]).forEach(([id,src])=>{const el=document.createElement('div');el.className='word '+id;const base=document.createElement('img');base.src=src+'?v=36';const sh=document.createElement('img');sh.src=src+'?v=36';sh.className='shine';el.append(base,sh);w.appendChild(el)})}
 async function sync(){try{const r=await fetch(BACKEND_URL+'/state?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const x=await r.json();if(x&&x.state){const next={...state,...x.state};const changed=items.some(([id])=>next[id]!==state[id]);state=next;if(changed)render()}}catch(e){}}
 render();sync();setInterval(sync,900);
 </script></body></html>

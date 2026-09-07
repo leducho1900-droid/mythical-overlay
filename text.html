@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Text Overlay V34B</title>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Text Overlay V35</title>
 <style>
 html,body{margin:0;width:100%;height:100%;background:transparent!important;overflow:hidden}
 body{display:flex;align-items:center;justify-content:center}
 #wrap{width:min(96vw,1100px);display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:18px;padding:8px;box-sizing:border-box}
-.word{position:relative;width:min(42vw,330px);aspect-ratio:620/520;display:flex;align-items:center;justify-content:center;overflow:hidden;filter:drop-shadow(0 5px 5px rgba(0,0,0,.35));transform:translateZ(0)}
+.word{position:relative;width:min(42vw,330px);aspect-ratio:700/520;display:flex;align-items:center;justify-content:center;overflow:hidden;filter:drop-shadow(0 5px 5px rgba(0,0,0,.35));transform:translateZ(0)}
 .word img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none}
 .word .shine{filter:brightness(1.8) contrast(.9);opacity:.88;clip-path:polygon(-26% 0,-6% 0,22% 100%,2% 100%);animation:shineSweep 3.1s cubic-bezier(.4,0,.2,1) infinite;will-change:clip-path}
 .word:nth-child(2) .shine{animation-delay:-.7s}.word:nth-child(3) .shine{animation-delay:-1.4s}.word:nth-child(4) .shine{animation-delay:-2.1s}
@@ -12,9 +12,9 @@ body{display:flex;align-items:center;justify-content:center}
 @media(max-width:650px){.word{width:min(88vw,360px)}}
 </style></head><body><div id="wrap"></div><script>
 const BACKEND_URL='https://mythical-overlay-backend.leducho1900.workers.dev';
-const items=[['text_3in1','text_3in1.png'],['text_4in1','text_4in1.png'],['text_5in1','text_5in1.png'],['text_6in1','text_6in1.png']];
+const items=[['text_3in1','combo_3in1_v35.png'],['text_4in1','combo_4in1_v35.png'],['text_5in1','combo_5in1_v35.png'],['text_6in1','combo_6in1_v35.png']];
 let state={text_3in1:false,text_4in1:false,text_5in1:false,text_6in1:false};
-function render(){const w=document.getElementById('wrap');w.innerHTML='';items.filter(([id])=>state[id]).forEach(([id,src])=>{const el=document.createElement('div');el.className='word '+id;const base=document.createElement('img');base.src=src+'?v=34b';const sh=document.createElement('img');sh.src=src+'?v=34b';sh.className='shine';el.append(base,sh);w.appendChild(el)})}
+function render(){const w=document.getElementById('wrap');w.innerHTML='';items.filter(([id])=>state[id]).forEach(([id,src])=>{const el=document.createElement('div');el.className='word '+id;const base=document.createElement('img');base.src=src+'?v=35';const sh=document.createElement('img');sh.src=src+'?v=35';sh.className='shine';el.append(base,sh);w.appendChild(el)})}
 async function sync(){try{const r=await fetch(BACKEND_URL+'/state?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const x=await r.json();if(x&&x.state){const next={...state,...x.state};const changed=items.some(([id])=>next[id]!==state[id]);state=next;if(changed)render()}}catch(e){}}
 render();sync();setInterval(sync,900);
 </script></body></html>

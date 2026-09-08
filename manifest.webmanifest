@@ -1,9 +1,0 @@
-{
-  "name":"Mythical Control",
-  "short_name":"Mythical Control",
-  "start_url":"control_v44.html?v=44",
-  "display":"standalone",
-  "background_color":"#111111",
-  "theme_color":"#111111",
-  "icons":[{"src":"app_icon.png","sizes":"512x512","type":"image/png"}]
-}

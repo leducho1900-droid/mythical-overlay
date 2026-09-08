@@ -1,6 +1,20 @@
 <!doctype html>
 <html lang="vi">
 <head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<script>
+(function(){
+  try{
+    const u=new URL(location.href);
+    if(u.searchParams.get('app')==='windows' && !u.searchParams.has('_fresh')){
+      u.searchParams.set('_fresh',Date.now().toString());
+      location.replace(u.href);
+    }
+  }catch(e){}
+})();
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mythical Control • Auto Update</title>
@@ -12,7 +26,7 @@
 </style>
 </head>
 <body><div class="wrap">
-<div class="brand"><img src="app_icon.png" alt=""><div><h1>Mythical Control</h1><div class="ver">AUTO UPDATE • nhớ key tự động</div></div></div>
+<div class="brand"><img src="app_icon.png" alt=""><div><h1>Mythical Control</h1><div class="ver">V51 • AUTO UPDATE • nhớ key tự động</div></div></div>
 <div id="loginBox" class="login"><div>Nhập key điều khiển</div><input id="key" type="password" autocomplete="current-password" placeholder="Key của bạn"><div class="all"><button class="btn copy" onclick="login(false)">Mở điều khiển</button><button class="btn secondary" onclick="forgetSavedKey()">Quên key đã lưu</button></div><div id="saved" class="saved">✅ Đã tìm thấy key đã lưu — đang tự đăng nhập.</div></div>
 <div id="panel" class="locked">
 <div class="section"><div class="sub">Room riêng của key này</div><div id="room" class="room"></div><div class="all"><button class="btn secondary" onclick="forgetSavedKey()">🔑 Đổi / quên key</button></div></div>
